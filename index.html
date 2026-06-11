@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Hábitos</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Mis Hábitos</h1>
+    <p id="fecha-hoy" aria-live="polite"></p>
+  </header>
+
+  <main>
+    <section aria-labelledby="titulo-nuevo-habito">
+      <h2 id="titulo-nuevo-habito">Nuevo hábito</h2>
+
+      <form id="form-habito">
+        <div class="campo">
+          <label for="nombre-habito">¿Qué hábito quieres construir?</label>
+          <input
+            type="text"
+            id="nombre-habito"
+            name="nombre"
+            placeholder="Ej: Beber 2 litros de agua"
+            required
+            maxlength="80"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="campo">
+          <label for="frecuencia-habito">Frecuencia</label>
+          <select id="frecuencia-habito" name="frecuencia">
+            <option value="diario" selected>Diario</option>
+            <option value="lunes-viernes">Lunes a viernes</option>
+            <option value="personalizado" disabled>Personalizado (próximamente)</option>
+          </select>
+        </div>
+
+        <button type="submit">Agregar</button>
+      </form>
+    </section>
+
+    <section id="lista-habitos" aria-labelledby="titulo-lista">
+      <h2 id="titulo-lista">Hoy</h2>
+      <ul id="ul-habitos"></ul>
+      <div id="estado-vacio">
+        <p>Todavía no tienes hábitos. Crea el primero arriba: los grandes cambios empiezan con un paso pequeño. 🌱</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><small>Hábitos · hecho con paciencia</small></p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

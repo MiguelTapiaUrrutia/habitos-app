@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Tokens de diseño — paleta "vida saludable sobria"
+   Base clara y cálida, verde salvia/bosque como único acento.
+   Solo tokens y tipografía por ahora; los estilos de componentes vendrán
+   cuando la paleta esté aprobada.
+   ========================================================================== */
+
+:root {
+  /* --- Color: superficies --- */
+  --color-fondo: #fafaf7;          /* blanco roto cálido, casi papel */
+  --color-superficie: #ffffff;     /* tarjetas y form sobre el fondo */
+  --color-borde: #dde3de;          /* borde sutil con matiz verdoso */
+
+  /* --- Color: texto --- */
+  --color-texto: #26312b;          /* carbón verdoso, no negro puro */
+  --color-texto-suave: #6b7570;    /* secundario: fecha, footer, ayudas */
+
+  /* --- Color: acento (verde natural, no flúor) --- */
+  --color-acento: #4a7c59;         /* salvia/bosque: botones, enlaces */
+  --color-acento-oscuro: #3a6347;  /* hover y estados activos */
+  --color-acento-palido: #e8f0ea;  /* fondos sutiles: hábito completado */
+
+  /* --- Color: semánticos --- */
+  --color-exito: var(--color-acento);
+  --color-error: #a4533f;          /* terracota apagado, coherente con la paleta */
+
+  /* --- Tipografía --- */
+  --fuente-base: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --texto-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --texto-titulo: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+  --texto-subtitulo: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  --texto-pequeno: 0.875rem;
+  --interlineado: 1.6;
+
+  /* --- Espaciado --- */
+  --espacio-xs: 0.25rem;
+  --espacio-s: 0.5rem;
+  --espacio-m: 1rem;
+  --espacio-l: 2rem;
+  --espacio-seccion: clamp(2rem, 1.5rem + 2.5vw, 4rem);
+
+  /* --- Forma y movimiento --- */
+  --radio: 0.5rem;
+  --duracion-rapida: 150ms;
+  --duracion-normal: 300ms;
+}
+
+/* --------------------------------------------------------------------------
+   Base tipográfica mínima
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-base);
+  font-size: var(--texto-base);
+  line-height: var(--interlineado);
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+}
+
+h1 {
+  font-size: var(--texto-titulo);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--texto-subtitulo);
+  line-height: 1.3;
+}
+
+small {
+  font-size: var(--texto-pequeno);
+  color: var(--color-texto-suave);
+}
