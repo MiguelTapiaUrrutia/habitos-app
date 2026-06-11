@@ -43,6 +43,7 @@ python -m http.server
 ## Estado
 
 - [x] Estructura HTML, tokens de diseño y capa de persistencia
-- [ ] Crear hábitos desde el formulario
-- [ ] Render de la lista y marcado de completados
+- [x] Crear hábitos desde el formulario (validación con mensajes accesibles)
+- [x] Render de la lista, contador de días y eliminar hábitos
+- [ ] Marcar hábitos como completados hoy
 - [ ] Frecuencia personalizada

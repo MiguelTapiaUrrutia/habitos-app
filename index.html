@@ -24,10 +24,12 @@
             id="nombre-habito"
             name="nombre"
             placeholder="Ej: Beber 2 litros de agua"
-            required
-            maxlength="80"
+            aria-required="true"
+            aria-describedby="error-nombre"
+            maxlength="50"
             autocomplete="off"
           >
+          <p id="error-nombre" class="mensaje-error" role="alert"></p>
         </div>
 
         <div class="campo">
