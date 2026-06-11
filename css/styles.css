@@ -22,6 +22,8 @@
   --color-exito: var(--color-acento);
   --color-error: #a4533f;          /* terracota apagado, coherente con la paleta */
   --color-error-palido: #f6ebe8;
+  --color-racha: #8a5a1d;          /* ámbar tostado para el texto de la racha */
+  --color-racha-palido: #f7eedd;   /* fondo cálido del badge 🔥 */
 
   /* --- Tipografía --- */
   --fuente-base: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -259,6 +261,16 @@ button:disabled {
   border-radius: 999px;
 }
 
+.badge-racha {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0.125rem 0.625rem;
+  color: var(--color-racha);
+  background-color: var(--color-racha-palido);
+  border-radius: 999px;
+}
+
 .habito-contador {
   font-size: var(--texto-pequeno);
   color: var(--color-texto-suave);
@@ -282,6 +294,17 @@ button:disabled {
 .boton-completar:not(:disabled):hover {
   background-color: var(--color-acento);
   color: #ffffff;
+}
+
+/* Completado hoy: el botón se llena con el verde acento. La transición de
+   background/color ya definida en `button` hace el cambio suave. */
+.boton-completar.completado {
+  background-color: var(--color-acento);
+  color: #ffffff;
+}
+
+.boton-completar.completado:hover {
+  background-color: var(--color-acento-oscuro);
 }
 
 /* Eliminar existe sin gritar: gris discreto que solo enseña su intención

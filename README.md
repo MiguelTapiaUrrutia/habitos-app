@@ -14,6 +14,7 @@ habitos-app/
 │   └── styles.css    # Tokens de diseño y tipografía base
 └── js/
     ├── app.js        # Estado, render y eventos
+    ├── fechas.js     # Utilidades puras de fechas y rachas, sin DOM
     └── storage.js    # Persistencia (localStorage), sin DOM
 ```
 
@@ -45,5 +46,5 @@ python -m http.server
 - [x] Estructura HTML, tokens de diseño y capa de persistencia
 - [x] Crear hábitos desde el formulario (validación con mensajes accesibles)
 - [x] Render de la lista, contador de días y eliminar hábitos
-- [ ] Marcar hábitos como completados hoy
+- [x] Marcar hábitos como completados hoy (toggle) y rachas 🔥
 - [ ] Frecuencia personalizada

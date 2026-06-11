@@ -20,8 +20,10 @@
  */
 
 import { guardarHabitos, cargarHabitos } from './storage.js';
+import { fechaHoy, calcularRacha } from './fechas.js';
 
 const LONGITUD_MAXIMA_NOMBRE = 50;
+const RACHA_MINIMA_VISIBLE = 3; // el 🔥 aparece a partir de esta racha
 
 const ETIQUETAS_FRECUENCIA = {
   'diario': 'Diario',
@@ -40,19 +42,9 @@ const selectFrecuencia = document.querySelector('#frecuencia-habito');
 const errorNombre = document.querySelector('#error-nombre');
 const ulHabitos = document.querySelector('#ul-habitos');
 const estadoVacio = document.querySelector('#estado-vacio');
-const fechaHoy = document.querySelector('#fecha-hoy');
+const parrafoFecha = document.querySelector('#fecha-hoy');
 
 // --- Utilidades ---
-
-// Fecha local en "YYYY-MM-DD". No usamos toISOString() porque convierte a
-// UTC: de noche podría devolver el día siguiente (o anterior) al local.
-function obtenerFechaHoy() {
-  const ahora = new Date();
-  const anio = ahora.getFullYear();
-  const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-  const dia = String(ahora.getDate()).padStart(2, '0');
-  return `${anio}-${mes}-${dia}`;
-}
 
 // "Café SOLO " → "cafe solo": descompone tildes (NFD), las elimina y baja a
 // minúsculas, para comparar nombres como los compararía una persona.
@@ -124,6 +116,20 @@ function crearItemHabito(habito) {
 
   cabecera.append(nombre, badge);
 
+  // La racha NO se guarda en el modelo: es estado derivado de `completados`.
+  // Si la guardáramos, a medianoche quedaría obsoleta sin que el usuario
+  // tocara nada (habría que detectarlo y corregirla en cada arranque), y
+  // cualquier bug podría dejarla contradiciendo a los datos reales. Calculada
+  // en cada render siempre es correcta, y con listas de este tamaño el costo
+  // es despreciable.
+  const racha = calcularRacha(habito.completados, habito.frecuencia);
+  if (racha >= RACHA_MINIMA_VISIBLE) {
+    const badgeRacha = document.createElement('span');
+    badgeRacha.className = 'badge-racha';
+    badgeRacha.textContent = `🔥 ${racha} días de racha`;
+    cabecera.append(badgeRacha);
+  }
+
   const contador = document.createElement('span');
   contador.className = 'habito-contador';
   const total = habito.completados.length;
@@ -135,14 +141,25 @@ function crearItemHabito(habito) {
   const acciones = document.createElement('div');
   acciones.className = 'habito-acciones';
 
+  const completadoHoy = habito.completados.includes(fechaHoy());
+
   const botonCompletar = document.createElement('button');
   botonCompletar.type = 'button';
-  botonCompletar.className = 'boton-completar';
-  botonCompletar.textContent = 'Completar hoy';
-  botonCompletar.setAttribute('aria-label', `Completar hoy: ${habito.nombre}`);
+  botonCompletar.className = completadoHoy
+    ? 'boton-completar completado'
+    : 'boton-completar';
+  botonCompletar.textContent = completadoHoy ? '✓ Completado' : 'Completar hoy';
+  // aria-pressed convierte el botón en un toggle para lectores de pantalla:
+  // anuncian "presionado / no presionado" además del nombre.
+  botonCompletar.setAttribute('aria-pressed', String(completadoHoy));
+  botonCompletar.setAttribute(
+    'aria-label',
+    completadoHoy
+      ? `Desmarcar como completado hoy: ${habito.nombre}`
+      : `Completar hoy: ${habito.nombre}`
+  );
   botonCompletar.dataset.id = habito.id;
   botonCompletar.dataset.accion = 'completar';
-  botonCompletar.disabled = true; // próxima etapa
 
   const botonEliminar = document.createElement('button');
   botonEliminar.type = 'button';
@@ -170,10 +187,25 @@ function agregarHabito(nombre, frecuencia) {
     id: crypto.randomUUID(),
     nombre,
     frecuencia,
-    creadoEl: obtenerFechaHoy(),
+    creadoEl: fechaHoy(),
     completados: [],
   };
   habitos.push(nuevoHabito);
+  persistirYRenderizar();
+}
+
+// Toggle: si hoy ya está en completados lo quita; si no, lo agrega.
+// Idempotente frente a clics repetidos: cada clic alterna un único valor.
+function alternarCompletadoHoy(id) {
+  const habito = habitos.find((candidato) => candidato.id === id);
+  if (!habito) {
+    return;
+  }
+  const hoy = fechaHoy();
+  const yaCompletado = habito.completados.includes(hoy);
+  habito.completados = yaCompletado
+    ? habito.completados.filter((fecha) => fecha !== hoy)
+    : [...habito.completados, hoy];
   persistirYRenderizar();
 }
 
@@ -226,10 +258,11 @@ ulHabitos.addEventListener('click', (evento) => {
 
   const { id, accion } = boton.dataset;
 
-  if (accion === 'eliminar') {
+  if (accion === 'completar') {
+    alternarCompletadoHoy(id);
+  } else if (accion === 'eliminar') {
     eliminarHabito(id);
   }
-  // 'completar' llegará en la próxima etapa.
 });
 
 // --- Inicio ---
@@ -240,6 +273,6 @@ const formateadorFecha = new Intl.DateTimeFormat('es-ES', {
   month: 'long',
   year: 'numeric',
 });
-fechaHoy.textContent = formateadorFecha.format(new Date());
+parrafoFecha.textContent = formateadorFecha.format(new Date());
 
 renderizarLista();
