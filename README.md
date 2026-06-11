@@ -47,4 +47,5 @@ python -m http.server
 - [x] Crear hábitos desde el formulario (validación con mensajes accesibles)
 - [x] Render de la lista, contador de días y eliminar hábitos
 - [x] Marcar hábitos como completados hoy (toggle) y rachas 🔥
+- [x] Panel de resumen: hoy, mejor racha activa y total histórico
 - [ ] Frecuencia personalizada

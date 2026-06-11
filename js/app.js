@@ -43,6 +43,12 @@ const errorNombre = document.querySelector('#error-nombre');
 const ulHabitos = document.querySelector('#ul-habitos');
 const estadoVacio = document.querySelector('#estado-vacio');
 const parrafoFecha = document.querySelector('#fecha-hoy');
+const panelResumen = document.querySelector('#resumen');
+const tarjetaHoy = document.querySelector('#tarjeta-hoy');
+const cifraHoy = document.querySelector('#cifra-hoy');
+const cifraRacha = document.querySelector('#cifra-racha');
+const detalleRacha = document.querySelector('#detalle-racha');
+const cifraTotal = document.querySelector('#cifra-total');
 
 // --- Utilidades ---
 
@@ -175,9 +181,67 @@ function crearItemHabito(habito) {
   return li;
 }
 
+// Función pura: calcula las tres cifras del panel a partir del estado,
+// sin tocar el modelo, el DOM ni localStorage.
+function obtenerResumen(habitos) {
+  const hoy = fechaHoy();
+
+  const completadosHoy = habitos.filter((habito) =>
+    habito.completados.includes(hoy)
+  ).length;
+
+  let mejorRacha = 0;
+  let nombreMejorRacha = null;
+  for (const habito of habitos) {
+    const racha = calcularRacha(habito.completados, habito.frecuencia);
+    if (racha > mejorRacha) {
+      mejorRacha = racha;
+      nombreMejorRacha = habito.nombre;
+    }
+  }
+
+  const totalHistorico = habitos.reduce(
+    (suma, habito) => suma + habito.completados.length,
+    0
+  );
+
+  return {
+    completadosHoy,
+    totalHabitos: habitos.length,
+    mejorRacha,
+    nombreMejorRacha,
+    totalHistorico,
+  };
+}
+
+function renderizarResumen() {
+  panelResumen.hidden = habitos.length === 0;
+  if (habitos.length === 0) {
+    return;
+  }
+
+  const resumen = obtenerResumen(habitos);
+
+  cifraHoy.textContent = `${resumen.completadosHoy} de ${resumen.totalHabitos}`;
+  // El panel solo es visible con habitos.length > 0, así que aquí
+  // "todo completado" implica necesariamente Y > 0.
+  tarjetaHoy.classList.toggle(
+    'todo-completado',
+    resumen.completadosHoy === resumen.totalHabitos
+  );
+
+  cifraRacha.textContent =
+    resumen.mejorRacha === 1 ? '1 día' : `${resumen.mejorRacha} días`;
+  detalleRacha.textContent = resumen.nombreMejorRacha ?? 'aún sin rachas';
+
+  cifraTotal.textContent = String(resumen.totalHistorico);
+}
+
+// Render general: todo lo que se ve se reconstruye desde el estado.
 function renderizarLista() {
   ulHabitos.replaceChildren(...habitos.map(crearItemHabito));
   estadoVacio.hidden = habitos.length > 0;
+  renderizarResumen();
 }
 
 // --- Acciones sobre el estado ---

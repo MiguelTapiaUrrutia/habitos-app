@@ -31,6 +31,7 @@
   --texto-titulo: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
   --texto-subtitulo: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
   --texto-pequeno: 0.875rem;
+  --texto-dato: clamp(1.5rem, 1.2rem + 1.5vw, 2rem); /* cifras del resumen */
   --interlineado: 1.6;
 
   /* --- Espaciado --- */
@@ -208,6 +209,68 @@ button:disabled {
 
 #form-habito button[type="submit"]:active {
   transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------------------
+   Panel de resumen
+   -------------------------------------------------------------------------- */
+
+#resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--espacio-m);
+}
+
+#resumen[hidden] {
+  display: none;
+}
+
+.tarjeta-resumen {
+  display: grid;
+  gap: var(--espacio-xs);
+  padding: var(--espacio-m);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-suave);
+  transition:
+    border-color var(--duracion-normal) ease,
+    background-color var(--duracion-normal) ease;
+}
+
+.resumen-etiqueta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-texto-suave);
+}
+
+.resumen-cifra {
+  font-size: var(--texto-dato);
+  font-weight: 700;
+  line-height: 1.1;
+  /* Dígitos de ancho fijo: las cifras no "bailan" al cambiar de 9 a 10 */
+  font-variant-numeric: tabular-nums;
+}
+
+.resumen-detalle {
+  font-size: var(--texto-pequeno);
+  color: var(--color-texto-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Celebración sobria: cuando todo lo de hoy está completado, la tarjeta
+   "Hoy" se tiñe del verde acento con la transición suave de la tarjeta */
+.tarjeta-resumen.todo-completado {
+  border-color: var(--color-acento);
+  background-color: var(--color-acento-palido);
+}
+
+.tarjeta-resumen.todo-completado .resumen-cifra {
+  color: var(--color-acento-oscuro);
 }
 
 /* --------------------------------------------------------------------------
